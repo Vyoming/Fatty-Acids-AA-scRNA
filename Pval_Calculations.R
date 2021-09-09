@@ -74,7 +74,7 @@ write.csv(Organoid_PVal,'Organoid_score_lvl_PVal.csv')
 
 
 #Gene level
-Pval_gene_list <- c('Lgr5', 'Ascl2', 'S100a6', 'Ly6a', 'CD55')
+Pval_gene_list <- c('Lgr5', 'Ascl2', 'S100a6', 'Ly6a', 'CD55', 'Clu', 'Areg', 'Ereg')
 
 Sub_cluster <- subset(Gene_de,  idents = "Stem 1")
 Idents(Sub_cluster) = Sub_cluster$type
@@ -88,6 +88,9 @@ Ascl2 <- c(wilcox.test(FetchData(object = test_AA, vars = "Ascl2")$Ascl2, FetchD
 S100a6 <- c(wilcox.test(FetchData(object = test_AA, vars = "S100a6")$S100a6, FetchData(object = test_contr, vars = "S100a6")$S100a6, alternative = "two.sided")$p.value, 0, 0)
 Ly6a <- c(wilcox.test(FetchData(object = test_AA, vars = "Ly6a")$Ly6a, FetchData(object = test_contr, vars = "Ly6a")$Ly6a, alternative = "two.sided")$p.value, 0, 0)
 CD55 <- c(wilcox.test(FetchData(object = test_AA, vars = "Cd55")$Cd55, FetchData(object = test_contr, vars = "Cd55")$Cd55, alternative = "two.sided")$p.value, 0, 0)
+Clu <- c(wilcox.test(FetchData(object = test_AA, vars = "Clu")$Clu, FetchData(object = test_contr, vars = "Clu")$Clu, alternative = "two.sided")$p.value, 0, 0)
+Areg <- c(wilcox.test(FetchData(object = test_AA, vars = "Areg")$Areg, FetchData(object = test_contr, vars = "Areg")$Areg, alternative = "two.sided")$p.value, 0, 0)
+Ereg <- c(wilcox.test(FetchData(object = test_AA, vars = "Ereg")$Ereg, FetchData(object = test_contr, vars = "Ereg")$Ereg, alternative = "two.sided")$p.value, 0, 0)
 
 for(i in names) {
   Sub_cluster <- subset(Gene_de,  idents = i)
@@ -102,13 +105,15 @@ for(i in names) {
   S100a6 <- c(S100a6, wilcox.test(FetchData(object = test_AA, vars = "S100a6")$S100a6, FetchData(object = test_contr, vars = "S100a6")$S100a6, alternative = "two.sided")$p.value)
   Ly6a <- c(Ly6a, wilcox.test(FetchData(object = test_AA, vars = "Ly6a")$Ly6a, FetchData(object = test_contr, vars = "Ly6a")$Ly6a, alternative = "two.sided")$p.value)
   CD55 <- c(CD55, wilcox.test(FetchData(object = test_AA, vars = "Cd55")$Cd55, FetchData(object = test_contr, vars = "Cd55")$Cd55, alternative = "two.sided")$p.value)
+  Clu <- c(Clu, wilcox.test(FetchData(object = test_AA, vars = "Clu")$Clu, FetchData(object = test_contr, vars = "Clu")$Clu, alternative = "two.sided")$p.value)
+  Areg <- c(Areg, wilcox.test(FetchData(object = test_AA, vars = "Areg")$Areg, FetchData(object = test_contr, vars = "Areg")$Areg, alternative = "two.sided")$p.value)
+  Ereg <- c(Ereg, wilcox.test(FetchData(object = test_AA, vars = "Ereg")$Ereg, FetchData(object = test_contr, vars = "Ereg")$Ereg, alternative = "two.sided")$p.value)
 }
 Cell_Type <- c('Stem 1','Stem 2','Stem 3',"Stem Like Progenitor", "Secretory Progenitor", "Transit Amplifying", "Enterocyte Progenitor" , "Enterocyte", "Enteroendocrine", "Goblet", "Tuft", "Paneth" )
-Gene_Level_PVal <- data.frame(Lgr5, Ascl2, S100a6, Ly6a, CD55)
+Gene_Level_PVal <- data.frame(Lgr5, Ascl2, S100a6, Ly6a, CD55, Clu, Areg, Ereg)
 rownames(Gene_Level_PVal) <- Cell_Type
-Gene_Level_PVal$Ly6a[is.nan(Gene_Level_PVal$Ly6a)] <- NA
 
-Gene_Level_PVal1 <- matrix(p.adjust(as.vector(as.matrix(Gene_Level_PVal)), method='BH'),ncol=5)
+Gene_Level_PVal1 <- matrix(p.adjust(as.vector(as.matrix(Gene_Level_PVal)), method='BH'),ncol=8)
 colnames(Gene_Level_PVal1) <-  Pval_gene_list
 rownames(Gene_Level_PVal1) <- Cell_Type
 
@@ -164,7 +169,7 @@ rownames(ARAsco_PVal) <- Cell_Type
 write.csv(ARAsco_PVal,'ARAsco_Score_PVal.csv')
 
 #Gene level
-Pval_gene_list <- c('Lgr5', 'Ascl2', 'S100a6', 'Ly6a', 'CD55')
+Pval_gene_list <- c('Lgr5', 'Ascl2', 'S100a6', 'Ly6a', 'CD55', 'Clu', 'Areg', 'Ereg')
 
 Sub_cluster <- subset(arasco.obj,  idents = "Stem 1")
 Idents(Sub_cluster) = Sub_cluster$type
@@ -173,11 +178,15 @@ test_contr <- subset(Sub_cluster,  idents =c('Control'))
 DefaultAssay(test_contr) <- "MAGIC_RNA"
 DefaultAssay(test_AA) <- "MAGIC_RNA"
 
+
 Lgr5 <- c(wilcox.test(FetchData(object = test_AA, vars = "Lgr5")$Lgr5, FetchData(object = test_contr, vars = "Lgr5")$Lgr5, alternative = "two.sided")$p.value, 0)
 Ascl2 <- c(wilcox.test(FetchData(object = test_AA, vars = "Ascl2")$Ascl2, FetchData(object = test_contr, vars = "Ascl2")$Ascl2, alternative = "two.sided")$p.value, 0)
 S100a6 <- c(wilcox.test(FetchData(object = test_AA, vars = "S100a6")$S100a6, FetchData(object = test_contr, vars = "S100a6")$S100a6, alternative = "two.sided")$p.value, 0)
 Ly6a <- c(wilcox.test(FetchData(object = test_AA, vars = "Ly6a")$Ly6a, FetchData(object = test_contr, vars = "Ly6a")$Ly6a, alternative = "two.sided")$p.value, 0)
 CD55 <- c(wilcox.test(FetchData(object = test_AA, vars = "Cd55")$Cd55, FetchData(object = test_contr, vars = "Cd55")$Cd55, alternative = "two.sided")$p.value, 0)
+Clu <- c(wilcox.test(FetchData(object = test_AA, vars = "Clu")$Clu, FetchData(object = test_contr, vars = "Clu")$Clu, alternative = "two.sided")$p.value, 0)
+Areg <- c(wilcox.test(FetchData(object = test_AA, vars = "Areg")$Areg, FetchData(object = test_contr, vars = "Areg")$Areg, alternative = "two.sided")$p.value, 0)
+Ereg <- c(wilcox.test(FetchData(object = test_AA, vars = "Ereg")$Ereg, FetchData(object = test_contr, vars = "Ereg")$Ereg, alternative = "two.sided")$p.value, 0)
 
 for(i in names) {
   Sub_cluster <- subset(arasco.obj,  idents = i)
@@ -192,14 +201,16 @@ for(i in names) {
   S100a6 <- c(S100a6, wilcox.test(FetchData(object = test_AA, vars = "S100a6")$S100a6, FetchData(object = test_contr, vars = "S100a6")$S100a6, alternative = "two.sided")$p.value)
   Ly6a <- c(Ly6a, wilcox.test(FetchData(object = test_AA, vars = "Ly6a")$Ly6a, FetchData(object = test_contr, vars = "Ly6a")$Ly6a, alternative = "two.sided")$p.value)
   CD55 <- c(CD55, wilcox.test(FetchData(object = test_AA, vars = "Cd55")$Cd55, FetchData(object = test_contr, vars = "Cd55")$Cd55, alternative = "two.sided")$p.value)
+  Clu <- c(Clu, wilcox.test(FetchData(object = test_AA, vars = "Clu")$Clu, FetchData(object = test_contr, vars = "Clu")$Clu, alternative = "two.sided")$p.value)
+  Areg <- c(Areg, wilcox.test(FetchData(object = test_AA, vars = "Areg")$Areg, FetchData(object = test_contr, vars = "Areg")$Areg, alternative = "two.sided")$p.value)
+  Ereg <- c(Ereg, wilcox.test(FetchData(object = test_AA, vars = "Ereg")$Ereg, FetchData(object = test_contr, vars = "Ereg")$Ereg, alternative = "two.sided")$p.value)
+
 }
-
 Cell_Type <- c('Stem 1','Stem 2', 'Transit Amplifying', 'Enterocyte Progenitor','Enterocyte (Proximal)','Enterocyte (Distal)', 'Enteroendocrine', 'Goblet', 'Paneth','Tuft')
-Gene_Level_PVal <- data.frame(Lgr5, Ascl2, S100a6, Ly6a, CD55)
+Gene_Level_PVal <- data.frame(Lgr5, Ascl2, S100a6, Ly6a, CD55, Clu, Areg, Ereg)
 rownames(Gene_Level_PVal) <- Cell_Type
-Gene_Level_PVal$Ly6a[is.nan(Gene_Level_PVal$Ly6a)] <- NA
 
-Gene_Level_PVal1 <- matrix(p.adjust(as.vector(as.matrix(Gene_Level_PVal)), method='BH'),ncol=5)
+Gene_Level_PVal1 <- matrix(p.adjust(as.vector(as.matrix(Gene_Level_PVal)), method='BH'),ncol=8)
 colnames(Gene_Level_PVal1) <-  Pval_gene_list
 rownames(Gene_Level_PVal1) <- Cell_Type
 
@@ -360,8 +371,9 @@ rownames(Gene_Level_PVal1) <- Cell_Type
 write.csv(Gene_Level_PVal,'Organoid_PGE2_Gene_lvl_PVal.csv')
 
 #PGE2
-Pval_gene_list <- c('Lgr5', 'Ascl2', 'S100a6', 'Ly6a', 'CD55')
-Idents(PGE_de) = PGE_de$Cell_type
+Idents(PGE_de) <- PGE_de$Cell_type
+Pval_gene_list <- c('Lgr5', 'Ascl2', 'S100a6', 'Ly6a', 'CD55', 'Clu', 'Areg', 'Ereg')
+
 Sub_cluster <- subset(PGE_de,  idents = "Stem 1")
 Idents(Sub_cluster) = Sub_cluster$type
 test_AA <- subset(Sub_cluster,  idents =c('Pge2'))
@@ -374,6 +386,9 @@ Ascl2 <- c(wilcox.test(FetchData(object = test_AA, vars = "Ascl2")$Ascl2, FetchD
 S100a6 <- c(wilcox.test(FetchData(object = test_AA, vars = "S100a6")$S100a6, FetchData(object = test_contr, vars = "S100a6")$S100a6, alternative = "two.sided")$p.value, 0, 0)
 Ly6a <- c(wilcox.test(FetchData(object = test_AA, vars = "Ly6a")$Ly6a, FetchData(object = test_contr, vars = "Ly6a")$Ly6a, alternative = "two.sided")$p.value, 0, 0)
 CD55 <- c(wilcox.test(FetchData(object = test_AA, vars = "Cd55")$Cd55, FetchData(object = test_contr, vars = "Cd55")$Cd55, alternative = "two.sided")$p.value, 0, 0)
+Clu <- c(wilcox.test(FetchData(object = test_AA, vars = "Clu")$Clu, FetchData(object = test_contr, vars = "Clu")$Clu, alternative = "two.sided")$p.value, 0, 0)
+Areg <- c(wilcox.test(FetchData(object = test_AA, vars = "Areg")$Areg, FetchData(object = test_contr, vars = "Areg")$Areg, alternative = "two.sided")$p.value, 0, 0)
+Ereg <- c(wilcox.test(FetchData(object = test_AA, vars = "Ereg")$Ereg, FetchData(object = test_contr, vars = "Ereg")$Ereg, alternative = "two.sided")$p.value, 0, 0)
 
 for(i in names) {
   Sub_cluster <- subset(PGE_de,  idents = i)
@@ -388,18 +403,18 @@ for(i in names) {
   S100a6 <- c(S100a6, wilcox.test(FetchData(object = test_AA, vars = "S100a6")$S100a6, FetchData(object = test_contr, vars = "S100a6")$S100a6, alternative = "two.sided")$p.value)
   Ly6a <- c(Ly6a, wilcox.test(FetchData(object = test_AA, vars = "Ly6a")$Ly6a, FetchData(object = test_contr, vars = "Ly6a")$Ly6a, alternative = "two.sided")$p.value)
   CD55 <- c(CD55, wilcox.test(FetchData(object = test_AA, vars = "Cd55")$Cd55, FetchData(object = test_contr, vars = "Cd55")$Cd55, alternative = "two.sided")$p.value)
+  Clu <- c(Clu, wilcox.test(FetchData(object = test_AA, vars = "Clu")$Clu, FetchData(object = test_contr, vars = "Clu")$Clu, alternative = "two.sided")$p.value)
+  Areg <- c(Areg, wilcox.test(FetchData(object = test_AA, vars = "Areg")$Areg, FetchData(object = test_contr, vars = "Areg")$Areg, alternative = "two.sided")$p.value)
+  Ereg <- c(Ereg, wilcox.test(FetchData(object = test_AA, vars = "Ereg")$Ereg, FetchData(object = test_contr, vars = "Ereg")$Ereg, alternative = "two.sided")$p.value)
 }
-
-Gene_Level_PVal <- Gene_Level_PVal[-c(4),]
 Cell_Type <- c('Stem 1','Stem 2','Stem 3',"Stem Like Progenitor", "Secretory Progenitor", "Transit Amplifying", "Enterocyte Progenitor" , "Enterocyte", "Enteroendocrine", "Goblet", "Tuft", "Paneth" )
-Gene_Level_PVal <- data.frame(Lgr5, Ascl2, S100a6, Ly6a, CD55)
+Gene_Level_PVal <- data.frame(Lgr5, Ascl2, S100a6, Ly6a, CD55, Clu, Areg, Ereg)
 rownames(Gene_Level_PVal) <- Cell_Type
-Gene_Level_PVal$Ly6a[is.nan(Gene_Level_PVal$Ly6a)] <- NA
-Gene_Level_PVal$S100a6[is.nan(Gene_Level_PVal$S100a6)] <- NA
 
-Gene_Level_PVal1 <- matrix(p.adjust(as.vector(as.matrix(Gene_Level_PVal)), method='BH'),ncol=5)
+Gene_Level_PVal1 <- matrix(p.adjust(as.vector(as.matrix(Gene_Level_PVal)), method='BH'),ncol=8)
 colnames(Gene_Level_PVal1) <-  Pval_gene_list
 rownames(Gene_Level_PVal1) <- Cell_Type
+
 
 write.csv(Gene_Level_PVal1,'Pge2_Gene_lvl_PVal.csv')
 

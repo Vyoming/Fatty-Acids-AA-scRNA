@@ -412,8 +412,9 @@ check_heatmap <- DoHeatmap(arasco.obj, features = DotPlot_Sig, group.by = 'Cell_
 ggsave(file = 'ARAsco_haber_cluster_Heatmap.svg', plot=check_heatmap, width=10, height=10)
 
 write.csv(Acluster.markers1,'ARAsco_Sigs_Per_Clust.csv')
-
-DotPlot_Sig <- c("Lgr5","Ascl2","Olfm4","Gkn3","S100a6","Ly6a","Anxa3", "Areg","Tubb5","Syce2","Stmn1","Fbxo5",'Cenpa','Ccna2','Ube2c','Cdkn3',"Apoa1","Apoa4","Fabp1","Adh6a",'Tmigd1', 'Fabp6', 'Slc51b', 'Slc51a', "Chgb","Tac1","Tph1","Neurog3", "Muc2","Fcgbp","Atoh1","Agr2","Pou2f3","Avil","Tuba1a","Adh1","Lyz1","Defa17","Defa24","Ang4") 
+my_levels <- c('Stem 1','Stem 2', 'Transit Amplifying', 'Enterocyte Progenitor','Enterocyte (Proximal)','Enterocyte (Distal)', 'Enteroendocrine','Tuft', 'Goblet', 'Paneth')
+arasco.obj$Cell_type <- factor(x = arasco.obj$Cell_type, levels = my_levels)
+DotPlot_Sig <- c("Lgr5","Ascl2","Olfm4","Gkn3","S100a6","Ly6a","Tubb5","Syce2","Stmn1","Fbxo5",'Cenpa','Ccna2','Ube2c','Cdkn3',"Apoa1","Apoa4","Fabp1","Adh6a",'Tmigd1', 'Fabp6', 'Slc51b', 'Slc51a', "Chgb","Tac1","Tph1","Neurog3", "Pou2f3","Avil","Tuba1a","Adh1","Muc2","Fcgbp","Atoh1","Agr2","Lyz1","Defa17","Defa24","Ang4") 
 DotPlot(arasco.obj, features = DotPlot_Sig, assay = 'RNA', group.by = 'Cell_type') + labs(y= "Cell Type", x="") + scale_colour_distiller( palette ="RdYlBu") + scale_size(range = c(0, 1)) +
   theme(text = element_text(size=5), legend.key.size = unit(0.0, "cm"), legend.text= element_blank(), legend.title = element_blank(), axis.text.x = element_text(size = 6, angle = 90, hjust = 1, vjust= .01), axis.text.y = element_text(size = 6), axis.title.x = element_blank(), axis.title.y = element_blank())
 ggsave(file= 'Arasco_Haber_check_dotplot.pdf', width=4.5, height=2.6, units="in")

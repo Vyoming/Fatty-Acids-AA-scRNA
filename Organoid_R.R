@@ -524,10 +524,13 @@ ggsave(file = 'Gene_de_haber_cluster_Heatmap.svg', plot=check_heatmap, width=10,
 
 write.csv(cluster.markers,'Gene_de_Sigs_Per_Clust.csv')
 geneColorsDiff = brewer.pal(n=5, "RdYlBu")
-DotPlot_Sig <- c("Lgr5","Ascl2","Olfm4","Gkn3","S100a6","Ly6a","Anxa3", "Areg",'Cbx3','Larp1','Slc39a1','Hnf4a','Sox4','Mmp7','Dll1','Tff3',"Tubb5","Syce2","Stmn1","Fbxo5",'Cenpa','Ccna2','Ube2c','Cdkn3',"Apoa1","Apoa4","Fabp1","Adh6a","Chgb","Tac1","Tph1","Neurog3", "Muc2","Fcgbp","Atoh1","Agr2","Pou2f3","Avil","Tuba1a","Adh1","Lyz1","Defa17","Defa24","Ang4") 
-DotPlot(Gene_de, features = DotPlot_Sig, assay = 'RNA', group.by = 'Cell_type') + labs(y= "Cell Type", x="") + scale_colour_distiller( palette ="RdYlBu") + scale_size(range = c(0, 1)) +
+
+my_levels <- c("Stem 1", "Stem 2", "Stem 3", "Stem Like Progenitor", "Secretory Progenitor", "Transit Amplifying", "Enterocyte Progenitor" , "Enterocyte", "Enteroendocrine", "Tuft",  "Goblet", "Paneth" )
+organoid$Cell_type <- factor(x = organoid$Cell_type, levels = my_levels)
+DotPlot_Sig <- c("Lgr5","Ascl2","Olfm4","Gkn3","S100a6","Ly6a","Anxa3", "Areg",'Cbx3','Larp1','Slc39a1','Hnf4a','Sox4','Mmp7','Dll1','Tff3',"Tubb5","Syce2","Stmn1","Fbxo5",'Cenpa','Ccna2','Ube2c','Cdkn3',"Apoa1","Apoa4","Fabp1","Adh6a","Chgb","Tac1","Tph1","Neurog3", "Tuba1a", "Adh1", "Pou2f3","Avil", "Muc2","Fcgbp","Atoh1","Agr2","Lyz1","Defa17","Defa24","Ang4") 
+DotPlot(organoid, features = DotPlot_Sig, assay = 'RNA', group.by = 'Cell_type') + labs(y= "Cell Type", x="") + scale_colour_distiller( palette ="RdYlBu") + scale_size(range = c(0, 1)) +
   theme(text = element_text(size=5), legend.key.size = unit(0.0, "cm"), legend.text= element_blank(), legend.title = element_blank(), axis.text.x = element_text(size = 6, angle = 90, hjust = 1, vjust= .01), axis.text.y = element_text(size = 6), axis.title.x = element_blank(), axis.title.y = element_blank())
-ggsave(file= 'Organoid_Haber_check_dotplot.pdf', width=4.5, height=2.6, units="in")
+ggsave(file= 'PGE2_Haber_check_dotplot.pdf', width=4.5, height=2.6, units="in")
 
 
 DE_PGE2_Control <- FindMarkers(Gene_de, ident.1 = "Pge2", ident.2 = "Control", test.use = "MAST", logfc.threshold = .05, min.pct = 0.15, assay = 'SCT')
@@ -1390,6 +1393,8 @@ setwd('~/')
 #saveRDS(Gene_de, file = "./data/AA_ARA_Intestine_project/Suerat_objects/Gene_de_Sobj.rds")
 
 Gene_de <- readRDS('./data/AA_ARA_Intestine_project/Suerat_objects/Gene_de_Sobj.rds', refhook = NULL)
+organoid <- readRDS("~/data/AA_ARA_Intestine_project/Suerat_objects/organoid_Sobj.rds")
+arasco.obj <- readRDS("~/data/AA_ARA_Intestine_project/Suerat_objects/arasco_Sobj.rds")
 
 Idents(Gene_de) <- Gene_de$Cell_type
 current.cluster.ids <- c("Stem 1", "Stem 2", "Stem 3", "Stem Like Progenitor", "Secretory Progenitor", "Transit Amplifying", "Enterocyte Progenitor" , "Enterocyte", "Enteroendocrine", "Goblet", "Tuft", "Paneth" )
@@ -1426,4 +1431,4 @@ writeGmtPathways(Scores, 'Beyaz_AA_final_Gene_de.gmt')
 identities <- levels(organoid@ident)
 my_color_palette <- hue_pal()(length(identities))
 
-
+rm(organoid, arasco.obj)
